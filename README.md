@@ -7,12 +7,12 @@
 	- future
 		表示一个尚未完成计算的trait，可以在未来某个时刻完成。
 		- src
-			'''rust
+			~~~rust
 			trait future {
 				type Output;
 				fn poll(self: Pin<&mut self>, cx: &mut Context<'_>) -> Poll<Self::Output>;
 			}
-			'''
+			~~~
 		- 
 完成时提供一个结果值 Ready(output)，未完成时
 	- async		
