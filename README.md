@@ -10,7 +10,8 @@
 			~~~rust
 			trait future {
 				type Output;
-				fn poll(self: Pin<&mut self>, cx: &mut Context<'_>) -> Poll<Self::Output>;
+				fn poll(self: Pin<&mut self>,
+					 cx: &mut Context<'_>) -> Poll<Self::Output>;
 			}
 			~~~
 		- 
