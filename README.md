@@ -1,4 +1,5 @@
 # rust练习
+学习rust笔记
 
 ## 2023-3-29
 学习rust异步编程库 ***tokio***
@@ -21,6 +22,19 @@
 		poll方法会被调用来检查Future是否已经完成，完成时提供一个结果值 Ready(output)，未完成时返回Pending
 - async		
 	标识一个方法，使其返回值成为 impl future<Output = ()> 类型
+	- demo
+		~~~rust
+		use futures::executor::block_on;
+		async fn myfunc() {
+			println!("Hello async");
+		}
+		fn main() {
+			// type of future = impl future<Output = ()>
+			let future = myfunc();
+			block_on(future);
+		}
 - await
+	
+
 
 
