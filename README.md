@@ -10,12 +10,16 @@
 			~~~rust
 			trait future {
 				type Output;
-				fn poll(self: Pin<&mut self>,
-					 cx: &mut Context<'_>) -> Poll<Self::Output>;
+				fn poll(
+					// 固定self地址
+					self: Pin<&mut Self>,
+					// Context中提供一个Waker类型
+					cx: &mut Context<'_>)
+					-> Poll<Self::Output>;
 			}
 			~~~
-		- 
-完成时提供一个结果值 Ready(output)，未完成时
+		- 原理
+			poll方法会被调用来检查Future是否已经完成，完成时提供一个结果值 Ready(output)，未完成时返回Pending
 	- async		
 		标识一个方法，使其返回值成为 impl future<Output = ()> 类型
 	- await
