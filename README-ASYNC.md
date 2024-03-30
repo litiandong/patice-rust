@@ -81,3 +81,28 @@
 
 + note
  只能在async方法中使用
+
+## 易错
+  + 不能在.await期间持有互斥锁
+    
+    ```rust,no_run
+    async fn increment_and_do_stuff(mutex: &Mutex<i32>) {
+        let mut lock: MutexGuard<i32> = mutex.lock().unwrap();
+        *lock += 1;
+
+        do_something_async().await;
+    } // 锁在这里超出作用域
+    ```
+
+    如果spawn一个任务执行上面的函数，会报错。因为std::sync::MutexGuard类型没有实现Send特性，意味着不能将一个Mutex锁发送到另一个线程，因为.await可能会让任务转移到另一个线程上执行。
+
+    * 提前释放锁
+    ```rust,no_run
+    async fn increment_and_do_stuff(mutex: &Mutex<i32>) {
+        {
+            let mut lock: MutexGuard<i32> = mutex.lock.unwrap();
+            *lock += 1;
+        }
+        do_something_async().await;
+    }
+
