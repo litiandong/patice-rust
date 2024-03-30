@@ -8,7 +8,7 @@
  表示一个尚未完成计算的trait，可以在未来某个时刻完成。
   + src
 
-  ~~~rust
+  ```rust
   trait future {
     type Output;
     fn poll(
@@ -22,7 +22,7 @@
     Ready(T),
     Pending,
   }
-  ~~~
+  ```
 
 + 原理
   poll方法会被调用来检查Future是否已经完成，完成时提供一个结果值 Ready(output)，未完成时返回Pending
@@ -31,7 +31,7 @@
  rust内置语法标识一个方法，使其返回值成为 impl future<Output = ()> 类型
   + demo
 
-  ~~~rust
+  ```rust, no_run
   use futures::executor::block_on;
   async fn myfunc() {
    println!("Hello async");
@@ -41,13 +41,13 @@
    let future = myfunc();
    block_on(future);
   }
-  ~~~
+  ```
 
 + await
 
  rust内置语法，await表达式的计算结果为Future的最终值 
 
- ~~~rust
+ ```rust,no_run
  Poll::Ready(Output)
  async fn myfunc() -> u16 {
   /* --skip-- */
@@ -56,14 +56,14 @@
  }
  let future = myfunc();
  let val = future.await;
- ~~~
+ ```
 
  rust从异步方法获取值的方法
  当首次轮询myfunc()返回的Future值时，会从函数的顶部开始执行，一直运行到some_io返回的Future的第一个await。await表达式会轮询some_io返回的Future
  直到返回Ready(Output)，然后把Output作为表达式的返回值，因此some_io.await大致等价于如下内容:
  伪代码:
 
- ~~~rust
+ ```rust,no_run
  {
    let io_future = some_io();
    'retry_point:
@@ -77,7 +77,7 @@
     }
    }
  } 
- ~~~
+ ```
 
 + note
  只能在async方法中使用
