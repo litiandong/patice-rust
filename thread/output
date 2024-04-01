@@ -1,0 +1,4 @@
+vector address in function 0x7ffc299efec4
+hi main thread
+vector address in spawn thread: 0x7f2e0babab7c
+Here's a vector: [2, 2, 2]

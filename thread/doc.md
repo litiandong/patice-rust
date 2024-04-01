@@ -62,22 +62,45 @@
     如果把一个栈上数据的所有权交给一个线程，那么线程持有这个数据的方式是什么，直接拿走数据的指针还是复制到自己的栈上呢（假设rust的线程与c语言一样有自己的独立栈）。
     栈上数据的所有权交给线程后，数据的生命周期会是什么。
 
-    如果有以下场景:
-          
+    探索:
 
+    测试代码:
 
+    ```rust,no_run
+    use std::thread::spawn;
+    use std::thread;
+    use std::time::Duration;
+    
+    fn foo() {
+        let v = [2; 3];
+        
+        let ptr = &v as *const _;
+        println!("vector address in function {:#x}", ptr as usize);
+    
+        thread::spawn(move || {
+            let ptr = &v as *const _;
+            println!("vector address in spawn thread: {:#x}", ptr as usize);
+            println!("Here's a vector: {:?}", v);
+        });
+    }
+    
+    fn main() {
+        foo();
+        println!("hi main thread");
+        thread::sleep(Duration::from_millis(1));
+    
+    }
+    ```
 
+    ```output
+    vector address in function 0x7ffc299efec4
+    hi main thread
+    vector address in spawn thread: 0x7f2e0babab7c
+    Here's a vector: [2, 2, 2]
+    ```
 
-
-
-
-
-
-
-
-
-
-
-
+    在方法中v的地址与子线程中的地址不同，而且在方法生命周期结束后，子线程没有被销毁。
+    说明rust线程与c线程一样拥有自己的栈，并且子线程从主线程中move的数据，其生命周期与子线程相同。
+    以上都是栈区数据的测试。
 
 
